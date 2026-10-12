@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Notifications | Shadow System</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #050509;
+            --panel: rgba(15, 15, 28, 0.82);
+            --border: rgba(145, 110, 255, 0.25);
+            --purple: #8b5cf6;
+            --violet: #a855f7;
+            --cyan: #22d3ee;
+            --text: #f5f3ff;
+            --muted: #aaa6bd;
+            --danger: #ff4d7d;
+        }
+
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at 15% 20%, rgba(139, 92, 246, .18), transparent 30%),
+                radial-gradient(circle at 85% 80%, rgba(34, 211, 238, .10), transparent 30%),
+                #050509;
+            color: var(--text);
+            font-family: Arial, sans-serif;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background-image:
+                linear-gradient(rgba(139,92,246,.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(139,92,246,.035) 1px, transparent 1px);
+            background-size: 45px 45px;
+            animation: gridMove 12s linear infinite;
+            z-index: -2;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: rgba(139,92,246,.08);
+            filter: blur(100px);
+            top: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            pointer-events: none;
+            z-index: -1;
+            animation: aura 5s ease-in-out infinite alternate;
+        }
+
+        @keyframes gridMove {
+            from { transform: translateY(0); }
+            to { transform: translateY(45px); }
+        }
+
+        @keyframes aura {
+            from { opacity: .4; transform: translateX(-50%) scale(.9); }
+            to { opacity: 1; transform: translateX(-50%) scale(1.15); }
+        }
+
+        nav {
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 5%;
+            border-bottom: 1px solid rgba(139,92,246,.2);
+            background: rgba(5,5,9,.8);
+            backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: 3px;
+            color: white;
+            text-shadow: 0 0 18px var(--purple);
+        }
+
+        .logo span {
+            color: var(--purple);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .nav-links a {
+            color: #aaa6bd;
+            text-decoration: none;
+            padding: 9px 12px;
+            border-radius: 10px;
+            font-size: 12px;
+            transition: .3s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: white;
+            background: rgba(139,92,246,.14);
+            box-shadow: 0 0 18px rgba(139,92,246,.15);
+        }
+
+        main {
+            width: min(1100px, 92%);
+            margin: 55px auto;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 45px;
+            animation: heroIn 1s ease;
+        }
+
+        @keyframes heroIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .eyebrow {
+            color: var(--cyan);
+            font-size: 12px;
+            letter-spacing: 5px;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: clamp(38px, 7vw, 75px);
+            letter-spacing: 5px;
+            font-weight: 900;
+            text-shadow:
+                0 0 10px rgba(139,92,246,.7),
+                0 0 40px rgba(139,92,246,.3);
+        }
+
+        .subtitle {
+            color: var(--muted);
+            margin-top: 15px;
+        }
+
+        .notification-list {
+            display: grid;
+            gap: 18px;
+        }
+
+        .notification {
+            position: relative;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            padding: 25px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            backdrop-filter: blur(18px);
+            overflow: hidden;
+            transition: .4s;
+            animation: cardIn .7s ease both;
+        }
+
+        .notification:nth-child(2) { animation-delay: .1s; }
+        .notification:nth-child(3) { animation-delay: .2s; }
+        .notification:nth-child(4) { animation-delay: .3s; }
+        .notification:nth-child(5) { animation-delay: .4s; }
+
+        @keyframes cardIn {
+            from {
+                opacity: 0;
+                transform: translateX(-40px) rotateX(10deg);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0) rotateX(0);
+            }
+        }
+
+        .notification:hover {
+            transform: translateY(-7px) scale(1.01);
+            border-color: rgba(139,92,246,.7);
+            box-shadow:
+                0 20px 50px rgba(0,0,0,.45),
+                0 0 30px rgba(139,92,246,.14);
+        }
+
+        .notification.unread {
+            border-color: rgba(34,211,238,.35);
+            box-shadow: inset 4px 0 0 var(--cyan);
+        }
+
+        .notification::after {
+            content: "";
+            position: absolute;
+            left: -100%;
+            top: 0;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255,255,255,.06),
+                transparent
+            );
+            transform: skewX(-20deg);
+            animation: scan 5s infinite;
+        }
+
+        @keyframes scan {
+            0%, 60% { left: -100%; }
+            100% { left: 160%; }
+        }
+
+        .icon {
+            min-width: 62px;
+            height: 62px;
+            border-radius: 18px;
+            display: grid;
+            place-items: center;
+            font-size: 26px;
+            background: radial-gradient(circle, rgba(139,92,246,.3), rgba(139,92,246,.08));
+            border: 1px solid rgba(139,92,246,.35);
+            box-shadow: 0 0 25px rgba(139,92,246,.15);
+        }
+
+        .content {
+            flex: 1;
+        }
+
+        .content h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .content p {
+            color: var(--muted);
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .time {
+            color: #777287;
+            font-size: 11px;
+            margin-top: 10px;
+        }
+
+        .status {
+            align-self: flex-start;
+            padding: 7px 10px;
+            border-radius: 20px;
+            font-size: 9px;
+            letter-spacing: 1px;
+            color: var(--cyan);
+            border: 1px solid rgba(34,211,238,.25);
+            background: rgba(34,211,238,.06);
+        }
+
+        .empty {
+            text-align: center;
+            padding: 90px 20px;
+            border: 1px dashed rgba(139,92,246,.3);
+            border-radius: 25px;
+            color: var(--muted);
+        }
+
+        .empty .big {
+            font-size: 65px;
+            margin-bottom: 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            50% { transform: translateY(-12px); }
+        }
+
+        @media (max-width: 900px) {
+            .nav-links {
+                display: none;
+            }
+        }
+
+        @media (max-width: 600px) {
+            main {
+                width: 94%;
+                margin-top: 35px;
+            }
+
+            .notification {
+                align-items: flex-start;
+                padding: 18px;
+            }
+
+            .icon {
+                min-width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+
+            .status {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav>
+    <div class="logo">SHADOW<span>EXCHANGE</span></div>
+
+    <div class="nav-links">
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('profile') }}">Profile</a>
+        <a href="{{ url_for('skills') }}">Skills</a>
+        <a href="{{ url_for('users') }}">Explore</a>
+        <a href="{{ url_for('matches') }}">Matches</a>
+        <a href="{{ url_for('requests') }}">Requests</a>
+        <a href="{{ url_for('connections') }}">Connections</a>
+        <a href="{{ url_for('notifications') }}" class="active">Notifications</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</nav>
+
+<main>
+
+    <section class="hero">
+        <div class="eyebrow">SYSTEM ALERTS • NETWORK ACTIVITY</div>
+        <h1>NOTIFICATIONS</h1>
+        <p class="subtitle">
+            Every important event in your skill exchange network.
+        </p>
+    </section>
+
+    {% if notifications %}
+
+        <section class="notification-list">
+
+            {% for notification in notifications %}
+
+                <article class="notification {% if not notification.is_read %}unread{% endif %}">
+
+                    <div class="icon">
+                        {% if notification.notification_type == "request" %}
+                            📩
+                        {% elif notification.notification_type == "accepted" %}
+                            ✅
+                        {% elif notification.notification_type == "connection" %}
+                            🔗
+                        {% elif notification.notification_type == "message" %}
+                            💬
+                        {% elif notification.notification_type == "match" %}
+                            ⚡
+                        {% elif notification.notification_type == "review" %}
+                            ⭐
+                        {% else %}
+                            🔔
+                        {% endif %}
+                    </div>
+
+                    <div class="content">
+
+                        <h3>
+                            {{ notification.title }}
+                        </h3>
+
+                        <p>
+                            {{ notification.message }}
+                        </p>
+
+                        <div class="time">
+                            {{ notification.created_at }}
+                        </div>
+
+                    </div>
+
+                    {% if notification.is_read %}
+                        <div class="status">READ</div>
+                    {% else %}
+                        <div class="status">NEW</div>
+                    {% endif %}
+
+                </article>
+
+            {% endfor %}
+
+        </section>
+
+    {% else %}
+
+        <section class="empty">
+
+            <div class="big">🔔</div>
+
+            <h2>No notifications yet</h2>
+
+            <p style="margin-top:12px;">
+                Your skill exchange activity will appear here.
+            </p>
+
+        </section>
+
+    {% endif %}
+
+</main>
+
+<script>
+
+    document.addEventListener("mousemove", function(e) {
+
+        const x = (e.clientX / window.innerWidth) * 100;
+        const y = (e.clientY / window.innerHeight) * 100;
+
+        document.body.style.background = `
+            radial-gradient(
+                circle at ${x}% ${y}%,
+                rgba(139,92,246,.13),
+                transparent 28%
+            ),
+            radial-gradient(
+                circle at 85% 80%,
+                rgba(34,211,238,.08),
+                transparent 30%
+            ),
+            #050509
+        `;
+    });
+
+</script>
+
+</body>
+</html>

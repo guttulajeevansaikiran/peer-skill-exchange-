@@ -1,0 +1,1766 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Shadow System | Dashboard
+    </title>
+
+
+    <style>
+
+        /* =====================================================
+           RESET
+        ===================================================== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            min-height: 100vh;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            color: #e8f7ff;
+
+            background:
+                radial-gradient(
+                    circle at 50% 20%,
+                    rgba(20, 100, 160, 0.18),
+                    transparent 35%
+                ),
+                radial-gradient(
+                    circle at 80% 80%,
+                    rgba(80, 30, 180, 0.14),
+                    transparent 35%
+                ),
+                #03050b;
+
+            overflow-x: hidden;
+
+        }
+
+
+        /* =====================================================
+           ANIMATED BACKGROUND
+        ===================================================== */
+
+        body::before {
+
+            content: "";
+
+            position: fixed;
+
+            inset: 0;
+
+            pointer-events: none;
+
+            background-image:
+
+                linear-gradient(
+                    rgba(100, 200, 255, 0.035) 1px,
+                    transparent 1px
+                ),
+
+                linear-gradient(
+                    90deg,
+                    rgba(100, 200, 255, 0.035) 1px,
+                    transparent 1px
+                );
+
+            background-size: 55px 55px;
+
+            mask-image:
+                linear-gradient(
+                    to bottom,
+                    black,
+                    transparent
+                );
+
+            animation:
+                gridMove 15s linear infinite;
+
+        }
+
+
+        @keyframes gridMove {
+
+            from {
+                transform: translateY(0);
+            }
+
+            to {
+                transform: translateY(55px);
+            }
+
+        }
+
+
+        /* =====================================================
+           PARTICLES
+        ===================================================== */
+
+        .particle {
+
+            position: fixed;
+
+            width: 3px;
+            height: 3px;
+
+            border-radius: 50%;
+
+            background: #8ee8ff;
+
+            box-shadow:
+                0 0 12px #56d9ff;
+
+            opacity: 0.6;
+
+            animation:
+                floatParticle linear infinite;
+
+            pointer-events: none;
+
+        }
+
+
+        .p1 {
+            left: 10%;
+            bottom: -20px;
+            animation-duration: 12s;
+        }
+
+        .p2 {
+            left: 25%;
+            bottom: -20px;
+            animation-duration: 17s;
+        }
+
+        .p3 {
+            left: 45%;
+            bottom: -20px;
+            animation-duration: 14s;
+        }
+
+        .p4 {
+            left: 65%;
+            bottom: -20px;
+            animation-duration: 20s;
+        }
+
+        .p5 {
+            left: 82%;
+            bottom: -20px;
+            animation-duration: 15s;
+        }
+
+
+        @keyframes floatParticle {
+
+            0% {
+
+                transform:
+                    translateY(0)
+                    translateX(0);
+
+                opacity: 0;
+
+            }
+
+            20% {
+                opacity: 0.8;
+            }
+
+            80% {
+                opacity: 0.5;
+            }
+
+            100% {
+
+                transform:
+                    translateY(-110vh)
+                    translateX(80px);
+
+                opacity: 0;
+
+            }
+
+        }
+
+
+        /* =====================================================
+           NAVBAR
+        ===================================================== */
+
+        .navbar {
+
+            height: 75px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding:
+                0 45px;
+
+            border-bottom:
+                1px solid rgba(
+                    90,
+                    210,
+                    255,
+                    0.15
+                );
+
+            background:
+                rgba(
+                    2,
+                    5,
+                    12,
+                    0.88
+                );
+
+            backdrop-filter:
+                blur(15px);
+
+            position: relative;
+
+            z-index: 20;
+
+        }
+
+
+        .logo {
+
+            font-size: 20px;
+
+            font-weight: 800;
+
+            letter-spacing: 3px;
+
+            color: white;
+
+        }
+
+
+        .logo span {
+
+            color: #72ddff;
+
+            text-shadow:
+                0 0 15px
+                rgba(80, 210, 255, 0.7);
+
+        }
+
+
+        .logo-symbol {
+
+            color: #72ddff;
+
+            margin-right: 8px;
+
+        }
+
+
+        .nav-links {
+
+            display: flex;
+
+            gap: 30px;
+
+        }
+
+
+        .nav-links a {
+
+            color: #8095a5;
+
+            text-decoration: none;
+
+            font-size: 12px;
+
+            letter-spacing: 2px;
+
+            transition: 0.3s;
+
+        }
+
+
+        .nav-links a:hover {
+
+            color: #8ce5ff;
+
+            text-shadow:
+                0 0 10px
+                #55d8ff;
+
+        }
+
+
+        .nav-user {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 15px;
+
+        }
+
+
+        .user-mini {
+
+            text-align: right;
+
+        }
+
+
+        .user-mini strong {
+
+            display: block;
+
+            color: white;
+
+            font-size: 13px;
+
+        }
+
+
+        .user-mini small {
+
+            color: #56d8ff;
+
+            font-size: 9px;
+
+            letter-spacing: 2px;
+
+        }
+
+
+        .logout {
+
+            padding:
+                10px 16px;
+
+            border:
+                1px solid
+                rgba(100, 220, 255, 0.35);
+
+            color: #8be5ff;
+
+            text-decoration: none;
+
+            font-size: 10px;
+
+            letter-spacing: 2px;
+
+            transition: 0.3s;
+
+        }
+
+
+        .logout:hover {
+
+            background:
+                rgba(70, 190, 255, 0.12);
+
+            box-shadow:
+                0 0 20px
+                rgba(70, 190, 255, 0.25);
+
+        }
+
+
+        /* =====================================================
+           MAIN
+        ===================================================== */
+
+        .dashboard {
+
+            max-width: 1450px;
+
+            margin: auto;
+
+            padding:
+                45px;
+
+            position: relative;
+
+            z-index: 5;
+
+        }
+
+
+        /* =====================================================
+           SYSTEM HEADER
+        ===================================================== */
+
+        .system-header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 35px;
+
+        }
+
+
+        .system-status {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            color: #6de2ff;
+
+            font-size: 11px;
+
+            letter-spacing: 3px;
+
+        }
+
+
+        .online-dot {
+
+            width: 8px;
+            height: 8px;
+
+            border-radius: 50%;
+
+            background: #69e8ff;
+
+            box-shadow:
+                0 0 15px
+                #69e8ff;
+
+            animation:
+                pulse 1.5s infinite;
+
+        }
+
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.7);
+                opacity: 0.5;
+            }
+
+        }
+
+
+        .system-time {
+
+            color: #526777;
+
+            font-size: 10px;
+
+            letter-spacing: 2px;
+
+        }
+
+
+        /* =====================================================
+           WELCOME
+        ===================================================== */
+
+        .welcome {
+
+            margin-bottom: 35px;
+
+        }
+
+
+        .welcome small {
+
+            color: #5acfff;
+
+            font-size: 11px;
+
+            letter-spacing: 4px;
+
+        }
+
+
+        .welcome h1 {
+
+            margin-top: 10px;
+
+            font-size:
+                clamp(
+                    34px,
+                    5vw,
+                    65px
+                );
+
+            line-height: 1;
+
+            letter-spacing: -2px;
+
+        }
+
+
+        .welcome h1 span {
+
+            color: #6bdcff;
+
+            text-shadow:
+                0 0 30px
+                rgba(70, 210, 255, 0.5);
+
+        }
+
+
+        .welcome p {
+
+            margin-top: 15px;
+
+            color: #708594;
+
+            max-width: 600px;
+
+            line-height: 1.7;
+
+            font-size: 14px;
+
+        }
+
+
+        /* =====================================================
+           GRID
+        ===================================================== */
+
+        .dashboard-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                1.4fr
+                0.8fr
+                0.8fr;
+
+            gap: 20px;
+
+        }
+
+
+        /* =====================================================
+           CARD
+        ===================================================== */
+
+        .card {
+
+            position: relative;
+
+            padding: 28px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(10, 22, 35, 0.94),
+                    rgba(4, 8, 15, 0.94)
+                );
+
+            border:
+                1px solid
+                rgba(90, 200, 255, 0.14);
+
+            box-shadow:
+                inset 0 0 35px
+                rgba(50, 180, 255, 0.025),
+                0 20px 60px
+                rgba(0, 0, 0, 0.3);
+
+            overflow: hidden;
+
+            transition:
+                transform 0.35s,
+                border-color 0.35s,
+                box-shadow 0.35s;
+
+            animation:
+                cardReveal 0.8s ease both;
+
+        }
+
+
+        .card:hover {
+
+            transform:
+                translateY(-5px);
+
+            border-color:
+                rgba(100, 220, 255, 0.4);
+
+            box-shadow:
+                0 15px 45px
+                rgba(40, 180, 255, 0.1),
+                inset 0 0 30px
+                rgba(40, 180, 255, 0.04);
+
+        }
+
+
+        @keyframes cardReveal {
+
+            from {
+
+                opacity: 0;
+
+                transform:
+                    translateY(30px);
+
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                    translateY(0);
+
+            }
+
+        }
+
+
+        .card::before {
+
+            content: "";
+
+            position: absolute;
+
+            top: 0;
+            left: 0;
+
+            width: 70px;
+            height: 1px;
+
+            background:
+                #66dcff;
+
+            box-shadow:
+                0 0 15px
+                #66dcff;
+
+        }
+
+
+        .card-title {
+
+            color: #607888;
+
+            font-size: 10px;
+
+            letter-spacing: 3px;
+
+            margin-bottom: 20px;
+
+        }
+
+
+        /* =====================================================
+           PLAYER CARD
+        ===================================================== */
+
+        .player-card {
+
+            grid-row:
+                span 2;
+
+            min-height: 360px;
+
+        }
+
+
+        .player-content {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 30px;
+
+        }
+
+
+        .avatar {
+
+            width: 130px;
+            height: 130px;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            flex-shrink: 0;
+
+            border:
+                1px solid
+                rgba(90, 220, 255, 0.6);
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(50, 170, 255, 0.18),
+                    rgba(3, 10, 20, 0.9)
+                );
+
+            box-shadow:
+                0 0 30px
+                rgba(60, 210, 255, 0.18),
+                inset 0 0 30px
+                rgba(50, 180, 255, 0.1);
+
+            font-size: 50px;
+
+            animation:
+                avatarGlow 3s infinite;
+
+        }
+
+
+        @keyframes avatarGlow {
+
+            0%,
+            100% {
+
+                box-shadow:
+                    0 0 25px
+                    rgba(60, 210, 255, 0.15),
+                    inset 0 0 25px
+                    rgba(50, 180, 255, 0.08);
+
+            }
+
+            50% {
+
+                box-shadow:
+                    0 0 50px
+                    rgba(60, 210, 255, 0.3),
+                    inset 0 0 40px
+                    rgba(50, 180, 255, 0.15);
+
+            }
+
+        }
+
+
+        .player-info h2 {
+
+            font-size: 30px;
+
+            margin-bottom: 8px;
+
+        }
+
+
+        .player-info .username {
+
+            color: #5edaff;
+
+            font-size: 12px;
+
+            letter-spacing: 2px;
+
+        }
+
+
+        .player-info p {
+
+            margin-top: 20px;
+
+            color: #718492;
+
+            line-height: 1.7;
+
+            font-size: 13px;
+
+        }
+
+
+        .profile-button {
+
+            display: inline-block;
+
+            margin-top: 20px;
+
+            padding:
+                11px 20px;
+
+            border:
+                1px solid
+                rgba(80, 210, 255, 0.35);
+
+            color: #79ddff;
+
+            text-decoration: none;
+
+            font-size: 10px;
+
+            letter-spacing: 2px;
+
+            transition: 0.3s;
+
+        }
+
+
+        .profile-button:hover {
+
+            background:
+                rgba(80, 210, 255, 0.1);
+
+            box-shadow:
+                0 0 20px
+                rgba(80, 210, 255, 0.2);
+
+        }
+
+
+        /* =====================================================
+           STAT CARDS
+        ===================================================== */
+
+        .stat-card {
+
+            min-height: 170px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: space-between;
+
+        }
+
+
+        .stat-number {
+
+            font-size: 52px;
+
+            font-weight: 800;
+
+            color: white;
+
+            text-shadow:
+                0 0 25px
+                rgba(90, 210, 255, 0.35);
+
+        }
+
+
+        .stat-label {
+
+            color: #647b89;
+
+            font-size: 10px;
+
+            letter-spacing: 3px;
+
+        }
+
+
+        /* =====================================================
+           SKILLS
+        ===================================================== */
+
+        .skills-card {
+
+            grid-column:
+                span 2;
+
+        }
+
+
+        .skill-columns {
+
+            display: grid;
+
+            grid-template-columns:
+                1fr
+                1fr;
+
+            gap: 30px;
+
+        }
+
+
+        .skill-heading {
+
+            font-size: 10px;
+
+            letter-spacing: 3px;
+
+            color: #5bdcff;
+
+            margin-bottom: 15px;
+
+        }
+
+
+        .skill-list {
+
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 10px;
+
+        }
+
+
+        .skill {
+
+            padding:
+                9px 14px;
+
+            border:
+                1px solid
+                rgba(80, 200, 255, 0.18);
+
+            background:
+                rgba(60, 180, 255, 0.04);
+
+            color: #b7d4df;
+
+            font-size: 11px;
+
+            transition: 0.3s;
+
+        }
+
+
+        .skill:hover {
+
+            border-color:
+                #65dcff;
+
+            color: white;
+
+            box-shadow:
+                0 0 15px
+                rgba(80, 210, 255, 0.18);
+
+        }
+
+
+        .empty-skill {
+
+            color: #52636e;
+
+            font-size: 12px;
+
+        }
+
+
+        /* =====================================================
+           QUICK ACTIONS
+        ===================================================== */
+
+        .actions-card {
+
+            grid-column:
+                span 3;
+
+        }
+
+
+        .actions {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    4,
+                    1fr
+                );
+
+            gap: 15px;
+
+        }
+
+
+        .action {
+
+            text-decoration: none;
+
+            padding:
+                22px;
+
+            border:
+                1px solid
+                rgba(80, 200, 255, 0.13);
+
+            background:
+                rgba(10, 25, 38, 0.55);
+
+            transition: 0.3s;
+
+        }
+
+
+        .action:hover {
+
+            transform:
+                translateY(-5px);
+
+            border-color:
+                rgba(80, 220, 255, 0.45);
+
+            background:
+                rgba(50, 160, 220, 0.08);
+
+        }
+
+
+        .action-icon {
+
+            font-size: 25px;
+
+            margin-bottom: 12px;
+
+        }
+
+
+        .action strong {
+
+            display: block;
+
+            color: white;
+
+            font-size: 12px;
+
+            letter-spacing: 1px;
+
+        }
+
+
+        .action span {
+
+            display: block;
+
+            color: #5e7280;
+
+            font-size: 10px;
+
+            margin-top: 6px;
+
+        }
+
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media (max-width: 1000px) {
+
+            .dashboard-grid {
+
+                grid-template-columns:
+                    1fr 1fr;
+
+            }
+
+            .player-card {
+
+                grid-column:
+                    span 2;
+
+                grid-row:
+                    auto;
+
+            }
+
+            .skills-card {
+
+                grid-column:
+                    span 2;
+
+            }
+
+            .actions-card {
+
+                grid-column:
+                    span 2;
+
+            }
+
+            .actions {
+
+                grid-template-columns:
+                    1fr 1fr;
+
+            }
+
+            .nav-links {
+
+                display: none;
+
+            }
+
+        }
+
+
+        @media (max-width: 650px) {
+
+            .navbar {
+
+                padding:
+                    0 18px;
+
+            }
+
+            .dashboard {
+
+                padding:
+                    25px 18px;
+
+            }
+
+            .dashboard-grid {
+
+                grid-template-columns:
+                    1fr;
+
+            }
+
+            .player-card,
+            .skills-card,
+            .actions-card {
+
+                grid-column:
+                    span 1;
+
+            }
+
+            .player-content {
+
+                flex-direction:
+                    column;
+
+                align-items:
+                    flex-start;
+
+            }
+
+            .skill-columns {
+
+                grid-template-columns:
+                    1fr;
+
+            }
+
+            .actions {
+
+                grid-template-columns:
+                    1fr;
+
+            }
+
+            .user-mini {
+
+                display: none;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     PARTICLES
+===================================================== -->
+
+<div class="particle p1"></div>
+<div class="particle p2"></div>
+<div class="particle p3"></div>
+<div class="particle p4"></div>
+<div class="particle p5"></div>
+
+
+<!-- =====================================================
+     NAVBAR
+===================================================== -->
+
+<nav class="navbar">
+
+
+    <div class="logo">
+
+        <span class="logo-symbol">
+            ◈
+        </span>
+
+        SKILL
+        <span>
+            EXCHANGE
+        </span>
+
+    </div>
+
+
+    <div class="nav-links">
+
+        <a href="{{ url_for('dashboard') }}">
+            DASHBOARD
+        </a>
+
+        <a href="{{ url_for('profile') }}">
+            PROFILE
+        </a>
+
+        <a href="{{ url_for('skills') }}">
+            SKILLS
+        </a>
+
+        <a href="{{ url_for('users') }}">
+            EXPLORE
+        </a>
+
+        <a href="{{ url_for('requests') }}">
+            REQUESTS
+        </a>
+
+        <a href="{{ url_for('connections') }}">
+            CONNECTIONS
+        </a>
+
+    </div>
+
+
+    <div class="nav-user">
+
+        <div class="user-mini">
+
+            <strong>
+                {{ user.full_name }}
+            </strong>
+
+            <small>
+                PLAYER ONLINE
+            </small>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('logout') }}"
+            class="logout"
+        >
+            LOGOUT
+        </a>
+
+    </div>
+
+</nav>
+
+
+
+<!-- =====================================================
+     DASHBOARD
+===================================================== -->
+
+<main class="dashboard">
+
+
+    <!-- SYSTEM HEADER -->
+
+    <div class="system-header">
+
+        <div class="system-status">
+
+            <span class="online-dot"></span>
+
+            SHADOW SYSTEM ONLINE
+
+        </div>
+
+
+        <div class="system-time">
+
+            PLAYER STATUS :
+            ACTIVE
+
+        </div>
+
+    </div>
+
+
+
+    <!-- WELCOME -->
+
+    <section class="welcome">
+
+        <small>
+            PLAYER DETECTED
+        </small>
+
+
+        <h1>
+
+            Welcome,
+            <span>
+                {{ user.full_name }}
+            </span>
+
+        </h1>
+
+
+        <p>
+
+            Your Skill Exchange system is now active.
+            Build your skill profile, discover compatible
+            players, exchange knowledge and evolve together.
+
+        </p>
+
+    </section>
+
+
+
+    <!-- =================================================
+         DASHBOARD GRID
+    ================================================== -->
+
+    <section class="dashboard-grid">
+
+
+        <!-- PLAYER PROFILE -->
+
+        <div class="card player-card">
+
+            <div class="card-title">
+
+                PLAYER STATUS
+
+            </div>
+
+
+            <div class="player-content">
+
+
+                <div class="avatar">
+
+                    ◈
+
+                </div>
+
+
+                <div class="player-info">
+
+                    <h2>
+
+                        {{ user.full_name }}
+
+                    </h2>
+
+
+                    <div class="username">
+
+                        @{{ user.username }}
+
+                    </div>
+
+
+                    {% if user.bio %}
+
+                        <p>
+                            {{ user.bio }}
+                        </p>
+
+                    {% else %}
+
+                        <p>
+                            No bio configured yet.
+                            Complete your profile to
+                            unlock your player identity.
+                        </p>
+
+                    {% endif %}
+
+
+                    <a
+                        href="{{ url_for('profile') }}"
+                        class="profile-button"
+                    >
+
+                        OPEN PROFILE
+                        →
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- REQUESTS -->
+
+        <div class="card stat-card">
+
+            <div class="card-title">
+
+                SYSTEM REQUESTS
+
+            </div>
+
+
+            <div class="stat-number">
+
+                {{ pending_requests }}
+
+            </div>
+
+
+            <div class="stat-label">
+
+                PENDING REQUESTS
+
+            </div>
+
+        </div>
+
+
+
+        <!-- CONNECTIONS -->
+
+        <div class="card stat-card">
+
+            <div class="card-title">
+
+                NETWORK POWER
+
+            </div>
+
+
+            <div class="stat-number">
+
+                {{ connections }}
+
+            </div>
+
+
+            <div class="stat-label">
+
+                CONNECTIONS
+
+            </div>
+
+        </div>
+
+
+
+        <!-- SKILLS -->
+
+        <div class="card skills-card">
+
+            <div class="card-title">
+
+                SKILL INVENTORY
+
+            </div>
+
+
+            <div class="skill-columns">
+
+
+                <!-- CAN TEACH -->
+
+                <div>
+
+                    <div class="skill-heading">
+
+                        ⚡ SKILLS I CAN TEACH
+
+                    </div>
+
+
+                    <div class="skill-list">
+
+
+                        {% if teach_skills %}
+
+                            {% for skill in teach_skills %}
+
+                                <div class="skill">
+
+                                    {{ skill.skill_name }}
+
+                                </div>
+
+                            {% endfor %}
+
+                        {% else %}
+
+                            <div class="empty-skill">
+
+                                No teaching skills added yet.
+
+                            </div>
+
+                        {% endif %}
+
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- WANT TO LEARN -->
+
+                <div>
+
+                    <div class="skill-heading">
+
+                        ◈ SKILLS I WANT TO LEARN
+
+                    </div>
+
+
+                    <div class="skill-list">
+
+
+                        {% if learn_skills %}
+
+                            {% for skill in learn_skills %}
+
+                                <div class="skill">
+
+                                    {{ skill.skill_name }}
+
+                                </div>
+
+                            {% endfor %}
+
+                        {% else %}
+
+                            <div class="empty-skill">
+
+                                No learning skills added yet.
+
+                            </div>
+
+                        {% endif %}
+
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- QUICK ACTIONS -->
+
+        <div class="card actions-card">
+
+            <div class="card-title">
+
+                SYSTEM COMMANDS
+
+            </div>
+
+
+            <div class="actions">
+
+
+                <a
+                    href="{{ url_for('profile') }}"
+                    class="action"
+                >
+
+                    <div class="action-icon">
+                        ◈
+                    </div>
+
+                    <strong>
+                        PROFILE
+                    </strong>
+
+                    <span>
+                        Upgrade your player identity
+                    </span>
+
+                </a>
+
+
+
+                <a
+                    href="{{ url_for('skills') }}"
+                    class="action"
+                >
+
+                    <div class="action-icon">
+                        ⚡
+                    </div>
+
+                    <strong>
+                        MANAGE SKILLS
+                    </strong>
+
+                    <span>
+                        Add teach & learn skills
+                    </span>
+
+                </a>
+
+
+
+                <a
+                    href="{{ url_for('users') }}"
+                    class="action"
+                >
+
+                    <div class="action-icon">
+                        ◉
+                    </div>
+
+                    <strong>
+                        FIND PLAYERS
+                    </strong>
+
+                    <span>
+                        Discover skill partners
+                    </span>
+
+                </a>
+
+
+
+                <a
+                    href="{{ url_for('requests') }}"
+                    class="action"
+                >
+
+                    <div class="action-icon">
+                        ⇄
+                    </div>
+
+                    <strong>
+                        REQUESTS
+                    </strong>
+
+                    <span>
+                        Manage exchange requests
+                    </span>
+
+                </a>
+
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+</main>
+
+
+
+<script>
+
+    /* =====================================================
+       MOUSE ENERGY EFFECT
+    ===================================================== */
+
+    document.addEventListener(
+        "mousemove",
+        function(event) {
+
+            const x =
+                event.clientX /
+                window.innerWidth *
+                100;
+
+            const y =
+                event.clientY /
+                window.innerHeight *
+                100;
+
+
+            document.body.style.background =
+                `
+                radial-gradient(
+                    circle at ${x}% ${y}%,
+                    rgba(25,110,170,0.13),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 80% 80%,
+                    rgba(80,30,180,0.12),
+                    transparent 35%
+                ),
+                #03050b
+                `;
+
+        }
+    );
+
+
+    /* =====================================================
+       SYSTEM CONSOLE
+    ===================================================== */
+
+    console.log(
+        "%c⚔ SHADOW SYSTEM",
+        "color:#70ddff;font-size:22px;font-weight:bold;"
+    );
+
+    console.log(
+        "%cPLAYER DASHBOARD ONLINE",
+        "color:#7d8e99;font-size:12px;"
+    );
+
+</script>
+
+
+</body>
+
+</html>

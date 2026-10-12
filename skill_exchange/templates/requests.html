@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Connection Requests | Shadow System</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #ffffff;
+            background:
+                radial-gradient(circle at 20% 15%, rgba(91, 54, 190, 0.32), transparent 35%),
+                radial-gradient(circle at 85% 80%, rgba(38, 92, 190, 0.24), transparent 35%),
+                linear-gradient(135deg, #050816, #090d24 50%, #050816);
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background:
+                linear-gradient(rgba(120, 90, 255, 0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(120, 90, 255, 0.025) 1px, transparent 1px);
+            background-size: 45px 45px;
+        }
+
+        .navbar {
+            width: 100%;
+            padding: 18px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+            background: rgba(5, 8, 22, 0.88);
+            border-bottom: 1px solid rgba(130, 100, 255, 0.18);
+            backdrop-filter: blur(12px);
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: #bca8ff;
+            text-shadow: 0 0 15px rgba(140, 100, 255, 0.8);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 22px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .nav-links a {
+            color: #c9c7e8;
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #ffffff;
+            text-shadow: 0 0 10px #8c6cff;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 50px auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            letter-spacing: 3px;
+            margin-bottom: 12px;
+            text-shadow:
+                0 0 10px rgba(130, 90, 255, 0.9),
+                0 0 30px rgba(80, 80, 255, 0.5);
+        }
+
+        .hero p {
+            color: #aaa8c7;
+            font-size: 15px;
+        }
+
+        .system-line {
+            width: 150px;
+            height: 2px;
+            margin: 20px auto;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                #8f6bff,
+                transparent
+            );
+            box-shadow: 0 0 12px #8f6bff;
+        }
+
+        .flash {
+            max-width: 700px;
+            margin: 0 auto 25px;
+            padding: 14px 20px;
+            text-align: center;
+            border-radius: 10px;
+            color: #ddd6ff;
+            background: rgba(80, 60, 180, 0.14);
+            border: 1px solid rgba(130, 100, 255, 0.35);
+        }
+
+        .request-card {
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 18px;
+            border: 1px solid rgba(120, 100, 255, 0.25);
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(25, 25, 65, 0.88),
+                    rgba(8, 12, 30, 0.92)
+                );
+            box-shadow:
+                0 0 25px rgba(80, 60, 180, 0.12),
+                inset 0 0 25px rgba(70, 50, 150, 0.04);
+            transition: 0.35s ease;
+        }
+
+        .request-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(145, 115, 255, 0.6);
+            box-shadow: 0 0 35px rgba(90, 70, 220, 0.25);
+        }
+
+        .request-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 70%;
+            height: 1px;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                #8d6cff,
+                transparent
+            );
+            animation: scan 4s linear infinite;
+        }
+
+        @keyframes scan {
+            0% {
+                left: -100%;
+            }
+
+            100% {
+                left: 150%;
+            }
+        }
+
+        .avatar {
+            width: 65px;
+            height: 65px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(135deg, #6847e8, #263d9e);
+            border: 2px solid rgba(150, 125, 255, 0.55);
+            box-shadow: 0 0 20px rgba(110, 80, 255, 0.4);
+        }
+
+        .request-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .request-info h2 {
+            font-size: 19px;
+            color: #eeeeff;
+            margin-bottom: 5px;
+        }
+
+        .username {
+            font-size: 13px;
+            color: #8582a4;
+            margin-bottom: 10px;
+        }
+
+        .request-text {
+            color: #a7a4bd;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .action-form {
+            margin: 0;
+        }
+
+        .btn {
+            min-width: 95px;
+            padding: 11px 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .accept-btn {
+            color: white;
+            background: linear-gradient(135deg, #287c59, #176142);
+            box-shadow: 0 0 15px rgba(40, 150, 100, 0.20);
+        }
+
+        .accept-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 22px rgba(50, 180, 120, 0.4);
+        }
+
+        .reject-btn {
+            color: #ffc1c1;
+            background: rgba(130, 40, 55, 0.14);
+            border: 1px solid rgba(200, 70, 90, 0.28);
+        }
+
+        .reject-btn:hover {
+            background: rgba(160, 45, 65, 0.25);
+        }
+
+        .profile-btn {
+            display: inline-block;
+            min-width: 95px;
+            padding: 11px 15px;
+            border-radius: 8px;
+            text-align: center;
+            text-decoration: none;
+            color: #d8d2ff;
+            background: rgba(80, 65, 170, 0.12);
+            border: 1px solid rgba(120, 100, 255, 0.30);
+            font-size: 12px;
+            transition: 0.3s;
+        }
+
+        .profile-btn:hover {
+            background: rgba(100, 80, 210, 0.25);
+        }
+
+        .empty {
+            padding: 60px 25px;
+            text-align: center;
+            border-radius: 18px;
+            border: 1px solid rgba(120, 100, 255, 0.20);
+            background: rgba(15, 18, 45, 0.65);
+        }
+
+        .empty-icon {
+            font-size: 60px;
+            margin-bottom: 18px;
+        }
+
+        .empty h2 {
+            color: #ddd7ff;
+            margin-bottom: 10px;
+        }
+
+        .empty p {
+            color: #9997b8;
+            line-height: 1.7;
+            margin-bottom: 22px;
+        }
+
+        .matches-btn {
+            display: inline-block;
+            padding: 12px 24px;
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+            background: linear-gradient(135deg, #6040d8, #3156c8);
+            box-shadow: 0 0 18px rgba(80, 60, 200, 0.25);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 45px;
+            padding: 25px;
+            color: #66647d;
+            font-size: 12px;
+        }
+
+        @media (max-width: 750px) {
+
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                justify-content: center;
+                gap: 14px;
+            }
+
+            .container {
+                width: 94%;
+                margin-top: 35px;
+            }
+
+            .hero h1 {
+                font-size: 31px;
+            }
+
+            .request-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .request-info {
+                width: 100%;
+            }
+
+            .actions {
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .action-form {
+                flex: 1;
+            }
+
+            .btn,
+            .profile-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+
+        <div class="logo">
+            SHADOW SYSTEM
+        </div>
+
+        <div class="nav-links">
+
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+
+            <a href="{{ url_for('profile') }}">Profile</a>
+
+            <a href="{{ url_for('skills') }}">Skills</a>
+
+            <a href="{{ url_for('matches') }}">Matches</a>
+
+            <a href="{{ url_for('connections') }}">Connections</a>
+
+            <a href="{{ url_for('users') }}">Users</a>
+
+            <a href="{{ url_for('logout') }}">Logout</a>
+
+        </div>
+
+    </nav>
+
+
+    <main class="container">
+
+        <section class="hero">
+
+            <h1>CONNECTION REQUESTS</h1>
+
+            <div class="system-line"></div>
+
+            <p>
+                Manage incoming skill exchange requests.
+            </p>
+
+        </section>
+
+
+        {% with messages = get_flashed_messages() %}
+
+            {% if messages %}
+
+                {% for message in messages %}
+
+                    <div class="flash">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+
+            {% endif %}
+
+        {% endwith %}
+
+
+        {% if requests %}
+
+            {% for request in requests %}
+
+                <div class="request-card">
+
+                    <div class="avatar">
+
+                        {{ (request.full_name or request.username)[0]|upper }}
+
+                    </div>
+
+
+                    <div class="request-info">
+
+                        <h2>
+                            {{ request.full_name or request.username }}
+                        </h2>
+
+                        <div class="username">
+                            @{{ request.username }}
+                        </div>
+
+                        <div class="request-text">
+                            wants to connect with you for skill exchange.
+                        </div>
+
+                    </div>
+
+
+                    <div class="actions">
+
+                        <a
+                            href="{{ url_for('member_profile', user_id=request.id) }}"
+                            class="profile-btn"
+                        >
+                            Profile
+                        </a>
+
+
+                        <form
+                            method="POST"
+                            action="{{ url_for('accept_request', connection_id=request.connection_id) }}"
+                            class="action-form"
+                        >
+
+                            <button
+                                type="submit"
+                                class="btn accept-btn"
+                            >
+                                ✓ Accept
+                            </button>
+
+                        </form>
+
+
+                        <form
+                            method="POST"
+                            action="{{ url_for('reject_request', connection_id=request.connection_id) }}"
+                            class="action-form"
+                        >
+
+                            <button
+                                type="submit"
+                                class="btn reject-btn"
+                            >
+                                ✕ Reject
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    📡
+                </div>
+
+                <h2>
+                    No Pending Requests
+                </h2>
+
+                <p>
+                    You currently have no incoming connection requests.
+                    <br>
+                    Find users with matching skills and build your network.
+                </p>
+
+                <a
+                    href="{{ url_for('matches') }}"
+                    class="matches-btn"
+                >
+                    Find Skill Matches
+                </a>
+
+            </div>
+
+        {% endif %}
+
+
+        <div class="footer">
+            Shadow System • Skill Exchange Network
+        </div>
+
+    </main>
+
+</body>
+</html>

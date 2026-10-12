@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Shadow Chats</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            background:
+                radial-gradient(
+                    circle at top right,
+                    rgba(85, 40, 160, 0.30),
+                    transparent 35%
+                ),
+                radial-gradient(
+                    circle at bottom left,
+                    rgba(20, 70, 150, 0.25),
+                    transparent 35%
+                ),
+                #050816;
+            color: #ffffff;
+        }
+
+        .page {
+            width: 100%;
+            max-width: 1100px;
+            margin: auto;
+            padding: 25px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .title-area h1 {
+            font-size: 32px;
+            letter-spacing: 2px;
+            color: #ffffff;
+        }
+
+        .title-area p {
+            margin-top: 7px;
+            color: #9da8c7;
+            font-size: 14px;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            color: #ffffff;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(140,130,255,0.35);
+            padding: 11px 18px;
+            border-radius: 12px;
+            transition: 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(110,80,255,0.25);
+            transform: translateY(-2px);
+        }
+
+        .chat-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .chat-card {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+
+            padding: 18px;
+
+            text-decoration: none;
+            color: #ffffff;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(22, 25, 52, 0.95),
+                    rgba(10, 13, 30, 0.95)
+                );
+
+            border: 1px solid rgba(120, 100, 255, 0.25);
+            border-radius: 18px;
+
+            box-shadow:
+                0 0 25px rgba(70, 50, 160, 0.10);
+
+            transition: 0.3s;
+        }
+
+        .chat-card:hover {
+            transform: translateY(-3px);
+
+            border-color:
+                rgba(140, 110, 255, 0.70);
+
+            box-shadow:
+                0 0 30px rgba(100, 70, 220, 0.25);
+        }
+
+        .avatar {
+            width: 58px;
+            height: 58px;
+
+            flex-shrink: 0;
+
+            border-radius: 50%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 22px;
+            font-weight: bold;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #4d35a8,
+                    #182b73
+                );
+
+            border:
+                2px solid rgba(160, 140, 255, 0.45);
+
+            box-shadow:
+                0 0 18px rgba(100, 80, 230, 0.25);
+        }
+
+        .chat-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .chat-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-name {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .chat-email {
+            margin-top: 4px;
+            color: #8994b5;
+            font-size: 12px;
+        }
+
+        .last-message {
+            margin-top: 9px;
+            color: #aeb7d2;
+            font-size: 14px;
+
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .unread {
+            min-width: 24px;
+            height: 24px;
+
+            padding: 0 7px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50px;
+
+            background: #754cff;
+            color: #ffffff;
+
+            font-size: 12px;
+            font-weight: bold;
+
+            box-shadow:
+                0 0 15px rgba(117, 76, 255, 0.55);
+        }
+
+        .empty-box {
+            text-align: center;
+
+            padding: 70px 20px;
+
+            background:
+                rgba(12, 15, 34, 0.85);
+
+            border:
+                1px solid rgba(120, 100, 255, 0.20);
+
+            border-radius: 20px;
+        }
+
+        .empty-icon {
+            font-size: 55px;
+            margin-bottom: 18px;
+        }
+
+        .empty-box h2 {
+            font-size: 23px;
+            margin-bottom: 10px;
+        }
+
+        .empty-box p {
+            color: #8f9ab8;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 600px) {
+
+            .page {
+                padding: 16px;
+            }
+
+            .topbar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .title-area h1 {
+                font-size: 26px;
+            }
+
+            .chat-card {
+                padding: 14px;
+            }
+
+            .avatar {
+                width: 50px;
+                height: 50px;
+                font-size: 18px;
+            }
+
+            .chat-name {
+                font-size: 16px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <div class="topbar">
+
+        <div class="title-area">
+
+            <h1>💬 Shadow Chats</h1>
+
+            <p>
+                Your connected users and conversations
+            </p>
+
+        </div>
+
+        <a
+            href="{{ url_for('dashboard') }}"
+            class="back-btn"
+        >
+            ← Dashboard
+        </a>
+
+    </div>
+
+
+    {% if chat_users %}
+
+        <div class="chat-list">
+
+            {% for user in chat_users %}
+
+                <a
+                    href="{{ url_for('chat', user_id=user.id) }}"
+                    class="chat-card"
+                >
+
+                    <div class="avatar">
+
+                        {% if user.full_name %}
+                            {{ user.full_name[0]|upper }}
+                        {% elif user.username %}
+                            {{ user.username[0]|upper }}
+                        {% else %}
+                            U
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="chat-content">
+
+                        <div class="chat-top">
+
+                            <div>
+
+                                <div class="chat-name">
+
+                                    {% if user.full_name %}
+                                        {{ user.full_name }}
+                                    {% else %}
+                                        {{ user.username }}
+                                    {% endif %}
+
+                                </div>
+
+                                <div class="chat-email">
+                                    {{ user.email }}
+                                </div>
+
+                            </div>
+
+
+                            {% if user.unread_count and user.unread_count > 0 %}
+
+                                <div class="unread">
+                                    {{ user.unread_count }}
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="last-message">
+
+                            {% if user.last_message %}
+
+                                {{ user.last_message }}
+
+                            {% else %}
+
+                                Start a conversation...
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </a>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="empty-box">
+
+            <div class="empty-icon">
+                💬
+            </div>
+
+            <h2>No Chats Yet</h2>
+
+            <p>
+                You don't have any connected users yet.
+                <br>
+                Connect with someone to start chatting.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+</html>

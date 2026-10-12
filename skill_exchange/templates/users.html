@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Find Players | Skill Exchange</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+</head>
+
+<body>
+
+<div class="page-container">
+
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+
+    <div class="page-header">
+
+        <div>
+            <h1>FIND PLAYERS</h1>
+
+            <p>
+                Discover members, skills and friends
+                in the Skill Exchange network.
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         SEARCH AREA
+    ====================================================== -->
+
+    <div class="search-section">
+
+        <form
+            method="GET"
+            action="{{ url_for('users') }}"
+            class="search-box"
+        >
+
+            <!-- SEARCH INPUT -->
+
+            <input
+                type="text"
+                name="search"
+                value="{{ search }}"
+                placeholder="Search members, skills or friends..."
+                autocomplete="off"
+            >
+
+
+            <!-- SEARCH TYPE -->
+
+            <select
+                name="type"
+                class="search-type"
+            >
+
+                <option
+                    value="all"
+                    {% if search_type == "all" %}selected{% endif %}
+                >
+                    All
+                </option>
+
+                <option
+                    value="members"
+                    {% if search_type == "members" %}selected{% endif %}
+                >
+                    Members
+                </option>
+
+                <option
+                    value="skills"
+                    {% if search_type == "skills" %}selected{% endif %}
+                >
+                    Skills
+                </option>
+
+                <option
+                    value="friends"
+                    {% if search_type == "friends" %}selected{% endif %}
+                >
+                    Friends
+                </option>
+
+            </select>
+
+
+            <!-- SEARCH -->
+
+            <button
+                type="submit"
+                class="search-btn"
+            >
+                🔍 SEARCH
+            </button>
+
+
+            <!-- CLEAR -->
+
+            {% if search or search_type != "all" %}
+
+                <a
+                    href="{{ url_for('users') }}"
+                    class="btn clear-btn"
+                >
+                    ✕ CLEAR
+                </a>
+
+            {% endif %}
+
+        </form>
+
+    </div>
+
+
+    <!-- =====================================================
+         SEARCH RESULT INFORMATION
+    ====================================================== -->
+
+    {% if search %}
+
+        <div class="search-result-info">
+
+            <span>
+                Search results for:
+            </span>
+
+            <strong>
+                "{{ search }}"
+            </strong>
+
+            {% if search_type == "members" %}
+                <span>• Members</span>
+
+            {% elif search_type == "skills" %}
+                <span>• Skills</span>
+
+            {% elif search_type == "friends" %}
+                <span>• Friends</span>
+
+            {% else %}
+                <span>• All</span>
+            {% endif %}
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- =====================================================
+         PLAYERS GRID
+    ====================================================== -->
+
+    {% if users %}
+
+        <div class="players-grid">
+
+            {% for user in users %}
+
+                <div class="player-card">
+
+
+                    <!-- =====================================
+                         AVATAR
+                    ====================================== -->
+
+                    <div class="player-avatar">
+
+                        {% if user.full_name %}
+
+                            {{ user.full_name[0]|upper }}
+
+                        {% else %}
+
+                            {{ user.username[0]|upper }}
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- =====================================
+                         USER INFORMATION
+                    ====================================== -->
+
+                    <div class="player-info">
+
+                        <h2>
+                            {{ user.full_name }}
+                        </h2>
+
+                        <p class="username">
+                            @{{ user.username }}
+                        </p>
+
+                        {% if user.email %}
+
+                            <p class="email">
+                                {{ user.email }}
+                            </p>
+
+                        {% endif %}
+
+
+                        <!-- =================================
+                             TEACHING SKILLS
+                        ================================== -->
+
+                        {% if user.teaching_skills %}
+
+                            <div class="skill-section">
+
+                                <div class="skill-title">
+                                    ⚡ SKILLS I CAN TEACH
+                                </div>
+
+                                <div class="skills-list">
+
+                                    {% for skill in user.teaching_skills %}
+
+                                        <span class="skill-tag teach">
+                                            {{ skill }}
+                                        </span>
+
+                                    {% endfor %}
+
+                                </div>
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <!-- =================================
+                             LEARNING SKILLS
+                        ================================== -->
+
+                        {% if user.learning_skills %}
+
+                            <div class="skill-section">
+
+                                <div class="skill-title">
+                                    ◈ SKILLS I WANT TO LEARN
+                                </div>
+
+                                <div class="skills-list">
+
+                                    {% for skill in user.learning_skills %}
+
+                                        <span class="skill-tag learn">
+                                            {{ skill }}
+                                        </span>
+
+                                    {% endfor %}
+
+                                </div>
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <!-- =================================
+                             ACTIONS
+                        ================================== -->
+
+                        <div class="player-actions">
+
+
+                            <!-- VIEW PROFILE -->
+
+                            <a
+                                href="{{ url_for('member_profile', user_id=user.id) }}"
+                                class="btn view-profile"
+                            >
+                                VIEW PROFILE
+                            </a>
+
+
+                            <!-- =================================
+                                 CONNECTION STATUS
+                            ================================== -->
+
+                            {% if user.connection_status == "none" %}
+
+                                <form
+                                    method="POST"
+                                    action="{{ url_for('send_request', user_id=user.id) }}"
+                                >
+
+                                    <button
+                                        type="submit"
+                                        class="btn connect-btn"
+                                    >
+                                        CONNECT
+                                    </button>
+
+                                </form>
+
+
+                            {% elif user.connection_status == "sent" %}
+
+                                <!-- REQUEST SENT -->
+
+                                <div class="request-status sent-status">
+                                    ✓ REQUEST SENT
+                                </div>
+
+                                <form
+                                    method="POST"
+                                    action="{{ url_for('withdraw_request', user_id=user.id) }}"
+                                >
+
+                                    <button
+                                        type="submit"
+                                        class="btn withdraw-btn"
+                                    >
+                                        WITHDRAW REQUEST
+                                    </button>
+
+                                </form>
+
+
+                            {% elif user.connection_status == "received" %}
+
+                                <!-- REQUEST RECEIVED -->
+
+                                <div class="request-status received-status">
+                                    ↙ REQUEST RECEIVED
+                                </div>
+
+                                <a
+                                    href="{{ url_for('requests') }}"
+                                    class="btn accept-btn"
+                                >
+                                    VIEW REQUEST
+                                </a>
+
+
+                            {% elif user.connection_status == "connected" %}
+
+                                <!-- CONNECTED -->
+
+                                <div class="request-status connected-status">
+                                    ✓ CONNECTED
+                                </div>
+
+                                <a
+                                    href="{{ url_for('chat', user_id=user.id) }}"
+                                    class="btn chat-btn"
+                                >
+                                    💬 CHAT
+                                </a>
+
+                            {% endif %}
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+
+    {% else %}
+
+        <!-- =================================================
+             EMPTY RESULT
+        ================================================== -->
+
+        <div class="empty-state">
+
+            <div class="empty-icon">
+                🔍
+            </div>
+
+            {% if search %}
+
+                <h2>
+                    NO RESULTS FOUND
+                </h2>
+
+                <p>
+                    No members or skills matched
+                    "{{ search }}".
+                </p>
+
+            {% elif search_type == "friends" %}
+
+                <h2>
+                    NO FRIENDS YET
+                </h2>
+
+                <p>
+                    Your accepted connections will appear here.
+                </p>
+
+            {% else %}
+
+                <h2>
+                    NO PLAYERS FOUND
+                </h2>
+
+                <p>
+                    No players are available right now.
+                </p>
+
+            {% endif %}
+
+            <a
+                href="{{ url_for('users') }}"
+                class="btn"
+            >
+                VIEW ALL PLAYERS
+            </a>
+
+        </div>
+
+    {% endif %}
+
+
+</div>
+
+
+<!-- =========================================================
+     SMALL ANIMATION SCRIPT
+========================================================= -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const cards =
+            document.querySelectorAll(
+                ".player-card"
+            );
+
+        cards.forEach(
+            function (card, index) {
+
+                card.style.animationDelay =
+                    (index * 0.08) + "s";
+
+            }
+        );
+
+    }
+);
+
+</script>
+
+</body>
+</html>

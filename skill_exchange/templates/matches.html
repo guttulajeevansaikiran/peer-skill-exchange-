@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Skill Matches</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+    <style>
+
+        .matches-container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .matches-title {
+            text-align: center;
+            font-size: 34px;
+            margin-bottom: 10px;
+        }
+
+        .matches-subtitle {
+            text-align: center;
+            color: #aaa;
+            margin-bottom: 35px;
+        }
+
+        .match-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(300px, 1fr)
+                );
+
+            gap: 25px;
+        }
+
+        .match-card {
+            background:
+                rgba(10, 10, 20, 0.88);
+
+            border:
+                1px solid
+                rgba(255,255,255,0.12);
+
+            border-radius: 18px;
+
+            padding: 25px;
+
+            box-shadow:
+                0 10px 30px
+                rgba(0,0,0,0.4);
+        }
+
+        .match-card h2 {
+            margin-bottom: 6px;
+        }
+
+        .match-username {
+            color: #999;
+            margin-bottom: 22px;
+        }
+
+        .match-section {
+            margin-top: 18px;
+        }
+
+        .match-section-title {
+            color: #aaa;
+            font-size: 14px;
+            margin-bottom: 9px;
+        }
+
+        .skill-tag {
+            display: inline-block;
+
+            padding:
+                7px 12px;
+
+            margin:
+                3px;
+
+            border-radius:
+                20px;
+
+            font-size:
+                13px;
+
+            background:
+                rgba(255,255,255,0.06);
+        }
+
+        .teach-tag {
+            color: #00e676;
+
+            border:
+                1px solid
+                rgba(0,230,118,0.4);
+        }
+
+        .learn-tag {
+            color: #00b0ff;
+
+            border:
+                1px solid
+                rgba(0,176,255,0.4);
+        }
+
+        .perfect-match {
+
+            margin-top:
+                22px;
+
+            padding:
+                16px;
+
+            border-radius:
+                12px;
+
+            background:
+                rgba(0,230,118,0.08);
+
+            border:
+                1px solid
+                rgba(0,230,118,0.3);
+        }
+
+        .perfect-match-title {
+
+            color:
+                #00e676;
+
+            font-weight:
+                bold;
+
+            margin-bottom:
+                10px;
+        }
+
+        .match-line {
+            margin:
+                6px 0;
+
+            color:
+                #ddd;
+        }
+
+        .profile-btn {
+
+            display:
+                block;
+
+            text-align:
+                center;
+
+            margin-top:
+                20px;
+
+            padding:
+                11px;
+
+            border-radius:
+                10px;
+
+            text-decoration:
+                none;
+
+            color:
+                white;
+
+            border:
+                1px solid
+                rgba(255,255,255,0.2);
+        }
+
+        .connect-btn {
+
+            display:
+                block;
+
+            text-align:
+                center;
+
+            margin-top:
+                10px;
+
+            padding:
+                12px;
+
+            border-radius:
+                10px;
+
+            text-decoration:
+                none;
+
+            background:
+                #00e676;
+
+            color:
+                #000;
+
+            font-weight:
+                bold;
+        }
+
+        .no-match {
+
+            text-align:
+                center;
+
+            padding:
+                70px 20px;
+
+            color:
+                #aaa;
+        }
+
+        .no-match h2 {
+            color: white;
+            margin-bottom: 10px;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <div class="matches-container">
+
+        <h1 class="matches-title">
+            🤝 Skill Matches
+        </h1>
+
+        <p class="matches-subtitle">
+            Find players who can teach what you want to learn
+            and want to learn what you can teach.
+        </p>
+
+
+        {% if matches %}
+
+            <div class="match-grid">
+
+                {% for match in matches %}
+
+                    <div class="match-card">
+
+                        <h2>
+                            {{ match.full_name or match.username }}
+                        </h2>
+
+                        <div class="match-username">
+                            @{{ match.username }}
+                        </div>
+
+
+                        <div class="match-section">
+
+                            <div class="match-section-title">
+                                🟢 THEY CAN TEACH
+                            </div>
+
+                            {% if match.teaching_skills %}
+
+                                {% for skill in
+                                    match.teaching_skills.split(', ')
+                                %}
+
+                                    <span
+                                        class="skill-tag teach-tag"
+                                    >
+                                        {{ skill }}
+                                    </span>
+
+                                {% endfor %}
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="match-section">
+
+                            <div class="match-section-title">
+                                🔵 THEY WANT TO LEARN
+                            </div>
+
+                            {% if match.learning_skills %}
+
+                                {% for skill in
+                                    match.learning_skills.split(', ')
+                                %}
+
+                                    <span
+                                        class="skill-tag learn-tag"
+                                    >
+                                        {{ skill }}
+                                    </span>
+
+                                {% endfor %}
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="perfect-match">
+
+                            <div class="perfect-match-title">
+                                ⚡ PERFECT SKILL EXCHANGE
+                            </div>
+
+                            <div class="match-line">
+                                🟢 You teach:
+                                <strong>
+                                    {{ match.your_teaching_match }}
+                                </strong>
+                            </div>
+
+                            <div class="match-line">
+                                🔵 You learn:
+                                <strong>
+                                    {{ match.your_learning_match }}
+                                </strong>
+                            </div>
+
+                        </div>
+
+
+                        <a
+                            href="{{ url_for(
+                                'member_profile',
+                                user_id=match.id
+                            ) }}"
+                            class="profile-btn"
+                        >
+                            👤 VIEW PROFILE
+                        </a>
+
+
+                        <a
+                            href="{{ url_for(
+                                'send_request',
+                                user_id=match.id
+                            ) }}"
+                            class="connect-btn"
+                        >
+                            🤝 CONNECT
+                        </a>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="no-match">
+
+                <h2>
+                    🔍 No Perfect Matches Yet
+                </h2>
+
+                <p>
+                    Add at least one skill under
+                    <strong>I Can Teach</strong>
+                    and one skill under
+                    <strong>I Want To Learn</strong>.
+                </p>
+
+                <br>
+
+                <a
+                    href="{{ url_for('skills') }}"
+                    class="connect-btn"
+                >
+                    ⚡ MANAGE MY SKILLS
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</body>
+
+</html>

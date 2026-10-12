@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Profile Settings | Shadow System</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #ffffff;
+            background:
+                radial-gradient(circle at top left, #172554 0%, transparent 35%),
+                radial-gradient(circle at bottom right, #3b0764 0%, transparent 35%),
+                linear-gradient(135deg, #020617, #080b1d 50%, #12052b);
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background:
+                linear-gradient(
+                    rgba(255,255,255,0.02) 1px,
+                    transparent 1px
+                ),
+                linear-gradient(
+                    90deg,
+                    rgba(255,255,255,0.02) 1px,
+                    transparent 1px
+                );
+            background-size: 45px 45px;
+            mask-image: linear-gradient(to bottom, black, transparent);
+        }
+
+        .page {
+            width: min(950px, 92%);
+            margin: 0 auto;
+            padding: 35px 0 60px;
+        }
+
+        /* ================= HEADER ================= */
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .brand {
+            color: #a78bfa;
+            font-size: 14px;
+            letter-spacing: 4px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            color: #cbd5e1;
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            background: rgba(15, 23, 42, 0.7);
+            padding: 10px 18px;
+            border-radius: 10px;
+            transition: 0.3s;
+        }
+
+        .back-btn:hover {
+            color: white;
+            border-color: #8b5cf6;
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.35);
+            transform: translateY(-2px);
+        }
+
+        /* ================= TITLE ================= */
+
+        .title-section {
+            margin-bottom: 28px;
+        }
+
+        .title-section h1 {
+            font-size: clamp(30px, 6vw, 52px);
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            text-shadow:
+                0 0 10px rgba(139, 92, 246, 0.8),
+                0 0 35px rgba(59, 130, 246, 0.3);
+        }
+
+        .title-section p {
+            color: #94a3b8;
+            font-size: 15px;
+        }
+
+        /* ================= SETTINGS CARD ================= */
+
+        .settings-card {
+            position: relative;
+            background: rgba(7, 12, 30, 0.88);
+            border: 1px solid rgba(139, 92, 246, 0.35);
+            border-radius: 22px;
+            padding: 32px;
+            box-shadow:
+                0 0 40px rgba(76, 29, 149, 0.18),
+                inset 0 0 30px rgba(59, 130, 246, 0.03);
+            backdrop-filter: blur(15px);
+        }
+
+        .settings-card::before {
+            content: "";
+            position: absolute;
+            top: -1px;
+            left: 15%;
+            right: 15%;
+            height: 2px;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                #8b5cf6,
+                #38bdf8,
+                #8b5cf6,
+                transparent
+            );
+            box-shadow: 0 0 15px #8b5cf6;
+        }
+
+        .section-title {
+            color: #c4b5fd;
+            font-size: 18px;
+            margin-bottom: 22px;
+            letter-spacing: 1px;
+        }
+
+        /* ================= FORM ================= */
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            color: #cbd5e1;
+            font-size: 13px;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            color: #f8fafc;
+            background: rgba(2, 6, 23, 0.85);
+            border: 1px solid rgba(100, 116, 139, 0.35);
+            border-radius: 10px;
+            padding: 13px 14px;
+            font-size: 15px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: #8b5cf6;
+            box-shadow:
+                0 0 0 3px rgba(139, 92, 246, 0.1),
+                0 0 18px rgba(139, 92, 246, 0.18);
+        }
+
+        textarea {
+            min-height: 130px;
+            resize: vertical;
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: #64748b;
+        }
+
+        /* ================= INFO ================= */
+
+        .info-box {
+            margin-top: 28px;
+            padding: 16px 18px;
+            border-radius: 12px;
+            background: rgba(30, 41, 59, 0.35);
+            border: 1px solid rgba(96, 165, 250, 0.18);
+        }
+
+        .info-box p {
+            color: #94a3b8;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .info-box strong {
+            color: #60a5fa;
+        }
+
+        /* ================= BUTTONS ================= */
+
+        .actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .btn {
+            border: none;
+            text-decoration: none;
+            padding: 13px 24px;
+            border-radius: 10px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: bold;
+        }
+
+        .cancel-btn {
+            color: #cbd5e1;
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(100, 116, 139, 0.35);
+        }
+
+        .cancel-btn:hover {
+            color: white;
+            border-color: #64748b;
+        }
+
+        .save-btn {
+            color: white;
+            background: linear-gradient(
+                135deg,
+                #6d28d9,
+                #2563eb
+            );
+            border: 1px solid rgba(167, 139, 250, 0.5);
+            box-shadow:
+                0 0 18px rgba(124, 58, 237, 0.25);
+        }
+
+        .save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow:
+                0 0 25px rgba(124, 58, 237, 0.5);
+        }
+
+        /* ================= FLASH ================= */
+
+        .flash-container {
+            margin-bottom: 20px;
+        }
+
+        .flash {
+            padding: 13px 16px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .flash-success {
+            background: rgba(22, 163, 74, 0.15);
+            color: #86efac;
+            border-color: rgba(34, 197, 94, 0.3);
+        }
+
+        .flash-danger {
+            background: rgba(220, 38, 38, 0.15);
+            color: #fca5a5;
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .flash-warning {
+            background: rgba(234, 179, 8, 0.15);
+            color: #fde68a;
+            border-color: rgba(234, 179, 8, 0.3);
+        }
+
+        .flash-info {
+            background: rgba(37, 99, 235, 0.15);
+            color: #93c5fd;
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 700px) {
+
+            .page {
+                width: 94%;
+                padding-top: 20px;
+            }
+
+            .settings-card {
+                padding: 22px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            .top-bar {
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .brand {
+                font-size: 11px;
+            }
+        }
+
+        /* ================= ANIMATION ================= */
+
+        @keyframes pulseGlow {
+            0%, 100% {
+                box-shadow:
+                    0 0 40px rgba(76, 29, 149, 0.18);
+            }
+
+            50% {
+                box-shadow:
+                    0 0 55px rgba(76, 29, 149, 0.28);
+            }
+        }
+
+        .settings-card {
+            animation: pulseGlow 4s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <!-- ================= TOP BAR ================= -->
+
+    <div class="top-bar">
+
+        <div class="brand">
+            SHADOW SYSTEM
+        </div>
+
+        <a
+            href="{{ url_for('profile') }}"
+            class="back-btn"
+        >
+            ← Back to Profile
+        </a>
+
+    </div>
+
+
+    <!-- ================= TITLE ================= -->
+
+    <div class="title-section">
+
+        <h1>Profile Settings</h1>
+
+        <p>
+            Update your player information and profile identity.
+        </p>
+
+    </div>
+
+
+    <!-- ================= FLASH MESSAGES ================= -->
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+
+        {% if messages %}
+
+            <div class="flash-container">
+
+                {% for category, message in messages %}
+
+                    <div class="flash flash-{{ category }}">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+    {% endwith %}
+
+
+    <!-- ================= SETTINGS CARD ================= -->
+
+    <div class="settings-card">
+
+        <div class="section-title">
+            ⚙ PLAYER CONFIGURATION
+        </div>
+
+
+        <form
+            method="POST"
+            action="{{ url_for('profile_settings') }}"
+        >
+
+            <div class="form-grid">
+
+
+                <!-- FULL NAME -->
+
+                <div class="form-group">
+
+                    <label for="full_name">
+                        Full Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="full_name"
+                        name="full_name"
+                        value="{{ user.full_name or '' }}"
+                        placeholder="Enter your full name"
+                    >
+
+                </div>
+
+
+                <!-- USERNAME -->
+
+                <div class="form-group">
+
+                    <label for="username">
+                        Username *
+                    </label>
+
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        value="{{ user.username or '' }}"
+                        placeholder="Enter username"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- EMAIL -->
+
+                <div class="form-group full">
+
+                    <label for="email">
+                        Email *
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value="{{ user.email or '' }}"
+                        placeholder="Enter email address"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- LOCATION -->
+
+                <div class="form-group">
+
+                    <label for="location">
+                        Location
+                    </label>
+
+                    <input
+                        type="text"
+                        id="location"
+                        name="location"
+                        value="{{ user.location or '' }}"
+                        placeholder="Example: Guntur, Andhra Pradesh"
+                    >
+
+                </div>
+
+
+                <!-- EDUCATION -->
+
+                <div class="form-group">
+
+                    <label for="education">
+                        Education
+                    </label>
+
+                    <input
+                        type="text"
+                        id="education"
+                        name="education"
+                        value="{{ user.education or '' }}"
+                        placeholder="Example: B.Tech CSE"
+                    >
+
+                </div>
+
+
+                <!-- BIO -->
+
+                <div class="form-group full">
+
+                    <label for="bio">
+                        About You
+                    </label>
+
+                    <textarea
+                        id="bio"
+                        name="bio"
+                        placeholder="Tell other players about yourself, your interests and goals..."
+                    >{{ user.bio or '' }}</textarea>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================= INFO ================= -->
+
+            <div class="info-box">
+
+                <p>
+                    <strong>Shadow System Tip:</strong>
+                    Keep your profile information updated so other users
+                    can understand your background, skills and learning goals.
+                </p>
+
+            </div>
+
+
+            <!-- ================= ACTIONS ================= -->
+
+            <div class="actions">
+
+                <a
+                    href="{{ url_for('profile') }}"
+                    class="btn cancel-btn"
+                >
+                    Cancel
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn save-btn"
+                >
+                    ⚡ Save Changes
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>
